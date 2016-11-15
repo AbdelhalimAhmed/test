@@ -181,7 +181,7 @@ module.exports = React.createClass({
             //     }
             this.setState({ buttonState: 'idle',errorMassage:'' })
             this.props.navigator.push({
-                    component: 'signup',
+                    component: 'homepage',
                     
             });
             // }).done();
