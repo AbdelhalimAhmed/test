@@ -19,7 +19,7 @@ module.exports = React.createClass({
         });   
     },
     onMyAlbumesPress: function(userId, userName){
-        this.props.navigator.push({
+        this.props.navigator.push({ 
             component: 'MyAlbumes',
             data: userId,
             data1:userName,
@@ -32,14 +32,16 @@ module.exports = React.createClass({
         //alert(this.props.id)
         
         return (
-           <View style={{flex: 1, backgroundColor: '#fff'}}>
-            <Text style={{margin: 10, fontSize: 18, textAlign: 'left',backgroundColor: '#2196F3'}}>{this.props.text}</Text>
-            <Button text={'My Posts'} onPress={ () => this.onMyPostesPress(this.props.id, this.props.Name)}/>
-            <Button text={'My Albums'} onPress={() => this.onMyAlbumesPress(this.props.id, this.props.Name)}/> 
-            <Button text={'My Todo'} onPress={() => this.onMyTodoPress(this.props.id, this.props.Name)}/>                                                                  
+            <View style={{flex: 1, backgroundColor: '#fff'}}>
+                <Text style={{margin: 10, fontSize: 18, textAlign: 'left',backgroundColor: '#2196F3'}}>{'welcome '+this.props.text}</Text>
+                <Button text={'My Posts'} onPress={ () => this.onMyPostesPress(this.props.id, this.props.Name)}/>
+                <Button text={'My Albums'} onPress={() => this.onMyAlbumesPress(this.props.id, this.props.Name)}/> 
+                <Button text={'My Todo'} onPress={() => this.onMyTodoPress(this.props.id, this.props.Name)}/>                                                                  
             </View>
+           
         )
-    },
+    },///
+    
     
 });
 

@@ -9,6 +9,7 @@ var {
 
 module.exports = React.createClass({
     render: function() {
+        //alert("baba");
         return (
             <TouchableHighlight 
             style={styles.button}

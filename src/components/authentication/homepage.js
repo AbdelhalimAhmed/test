@@ -8,13 +8,16 @@ var {
     Image,
     TouchableHighlight,
     StyleSheet,
+    ToolbarAndroid,
+    DrawerLayoutAndroid,
     ListView,
     TouchableOpacity,
     
 } = React1;
 
 var Button = require('../common/button');
-
+var ToolBar = require('../authentication/ToolBar');
+var DrawerView = require('../common/DrawerView');
 
 
 module.exports = React.createClass({
@@ -108,12 +111,10 @@ module.exports = React.createClass({
     },
 
     render: function() {
-        const Header = () => (
-            //alert(this.props.data3);
-            <View  >
-                    <Button text={'Your photos'}/>
-            </View>
-        )
+        // const Header = () => (
+        //     //alert(this.props.data3);
+        //      //<ToolBar />  
+        // )
 
          const Main = () => (
              <ScrollView>
@@ -129,17 +130,43 @@ module.exports = React.createClass({
         return (
 
             <View style={styles.container}>
-                <Header/>
+            <DrawerLayoutAndroid
+                  drawerWidth={300}
+                  drawerLockMode = {'unlocked'}
+                  drawerPosition={DrawerLayoutAndroid.positions.Right}
+                  renderNavigationView={() => this.NavigationView() }
+                  onDrawerOpen = {this.onOpen}
+                  ref={'DRAWER_REF'}>
+            
+                <ToolBar onPress = {this.onToolPress}/> 
                 
                 <Main/>  
 
                 <View>
                     <Button text={'Back To AlbumPosts...'} onPress = {this.onPopPress}/> 
                 </View>
+            </DrawerLayoutAndroid>
             </View>
     
         );
       ///
+    },
+    NavigationView: function(){
+       return (<DrawerView text = {'ahmed'}/>);
+    },///
+    onPress: function() {
+        //alert("bla la bla");
+       
+  
+    },
+
+
+    onOpen: function(){
+        //alert('bla la bla')
+    },
+
+    onToolPress: function(){
+        this.refs['DRAWER_REF'].openDrawer();
     },
 
     onPopPress: function() {

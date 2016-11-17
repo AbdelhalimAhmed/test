@@ -14,13 +14,13 @@ var Signup = require('./components/authentication/signup');
 var Homepage = require('./components/authentication/homepage');
 // var DrawerView = require('./components/common/DrawerView');
 
-// var Posts = require('./components/authentication/posts');
+var Mainpage = require('./components/authentication/mainpage');
 // var Details = require('./components/authentication/details');
 
 var ROUTES = {
     signin: Signin,
     signup: Signup,
-    // posts: Posts,
+    mainpage: Mainpage,
     // details: Details,
 
     // MyPosts: MyPosts,
@@ -44,9 +44,9 @@ module.exports = React.createClass({
             return (<Signin navigator={navigator} data = {route.data} data1 = {route.data1} data2 = {route.data2} data3 = {route.data3} data4 = {route.data4} data5 = {route.data5}/>);
         case 'homepage':
             return (<Homepage navigator={navigator} data = {route.data} data1 = {route.data1} data2 = {route.data2} data3 = {route.data3} data4 = {route.data4} data5 = {route.data5}/>);
-        //// case 'details':
-        //     return (<Details navigator={navigator} data = {route.data} data1 = {route.data1} data2 = {route.data2} data3 = {route.data3} data4 = {route.data4} data5 = {route.data5}/>);
-        // case 'MyPosts':
+        case 'mainpage':
+             return (<Mainpage navigator={navigator} data = {route.data} data1 = {route.data1} data2 = {route.data2} data3 = {route.data3} data4 = {route.data4} data5 = {route.data5}/>);
+        /// case 'MyPosts':
         //     return (<MyPosts navigator={navigator} data = {route.data} data1 = {route.data1} data2 = {route.data2} data3 = {route.data3} data4 = {route.data4} data5 = {route.data5}/>);
         // case 'MyAlbumes':
         //     return (<MyAlbumes navigator={navigator} data = {route.data} data1 = {route.data1} data2 = {route.data2} data3 = {route.data3} data4 = {route.data4} data5 = {route.data5}/>);
@@ -59,7 +59,7 @@ module.exports = React.createClass({
         return (
             <Navigator
             style = {styles.container}
-            initialRoute={{component: 'homepage'}}
+            initialRoute={{component: 'signup'}}
             renderScene={this.renderScene}
             configureScene={() => {return Navigator.SceneConfigs.FloatFromRight}}
 
