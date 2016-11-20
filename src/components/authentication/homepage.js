@@ -1,222 +1,325 @@
-import React, { Component, } from 'react';
-import GridView from "react-native-easy-grid-view";
-var React1 = require('react-native');
-var {
-    View,
-    ScrollView,
-    Text,
-    Image,
-    TouchableHighlight,
+import React, { Component } from 'react';
+import {AppRegistry,
     StyleSheet,
-    ToolbarAndroid,
-    DrawerLayoutAndroid,
+    Text,
+    View,
     ListView,
     TouchableOpacity,
-    
-} = React1;
+    AlertIndicator,
+    DrawerLayoutAndroid,
+    ActivityIndicator,
+    TouchableHighlight,
+    ToolbarAndroid,
+    Alert,
+    Image} from 'react-native';
+import DrawerLayout from 'react-native-drawer-layout';
+
+//var DrawerLayoutAndroid = require('react-native-drawer-layout');
+//var React1 = require('react-native');
+
+const DropDown = require('react-native-dropdown');
+const {
+  Select,
+  Option,
+  OptionList,
+  updatePosition
+} = DropDown;
+
+// var { 
+  
+// } = React1;
+
+
 
 var Button = require('../common/button');
-var ToolBar = require('../authentication/ToolBar');
 var DrawerView = require('../common/DrawerView');
+//var Details = require('../authentication/details');
+var ToolBar = require('../authentication/ToolBar');
 
+var test =-1;
+var rows = [];
 
-module.exports = React.createClass({
+module.exports = React.createClass({ 
+
     getInitialState: function () {
         var getSectionData = (dataBlob, sectionID) => {
             return dataBlob[sectionID];
         }
 
+        var getNameView = (data, index) =>
+        {
+            return data[index];
+        }
+        this.state = {
+            canada: ''
+        };
+
         return {
             loaded : false,
-            dataSource : new GridView.DataSource({
+            dataSource : new ListView.DataSource({
                 getSectionData          : getSectionData,
                 rowHasChanged           : (r1, r2) => r1 !== r2
             }),
+            nameView: getNameView
         }
     },
     componentDidMount: function () {
-      // this.fetchData();
-      this.setState({
-        dataSource : this.state.dataSource.cloneWithCells([
-                {
-                    text: 1,
-                    backgroundColor:'#f00'
-                }
-                , {
-                    text: 2,
-                    backgroundColor:'#0f0'
-
-                }, {
-                    text: 3,
-                    backgroundColor:'#00f'
-
-                }, {
-                    text: 4,
-                    backgroundColor:'#f0f'
-
-                }, {
-                    text: 5,
-                    backgroundColor:'#fff'
-
-                }, {
-                    text: 6,
-                    backgroundColor:'#000'
-
-                }], 2),
-            cellWidth: 110,
-            cellHeight: 110
-      });
+        updatePosition(this.refs['SELECT1']);
+        updatePosition(this.refs['OPTIONLIST']);
+        this.fetchData();
     },
+    _getOptionList() {
+    return this.refs['OPTIONLIST'];
+  },
+  _canada(province) {
 
-    // fetchData: function () {
-    //     var API_URL = 'http://imageinterior-merged.rhcloud.com/ImageInterior/rest/getDayProducts';
-    //     fetch(API_URL).then((response) => response.json()).then((responseData) => {
-    //         var organizations = responseData;
-    //             //  length = organizations.length,
-    //             //  dataBlob = [],
-    //             //  name,
-    //             //  body,
-    //             //  j;
+    this.setState({
+      ...this.state,
+      canada: province
+    });
+  },
+    
+    fetchData: function () {
+        //rowApi = rowApi +10; 
+        //alert(this.props.data[1]);
+        var API_URL = 'http://imageinterior-merged.rhcloud.com/ImageInterior/rest/getDayProducts';
+        fetch(API_URL, {  
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+              },}).then((response) => response.json()).then((responseData) => {
+            var organizations = responseData.products,
 
-    //             // for (var i = 0; i < length ;  i++) {
-    //             //     dataBlob[i] = organizations[i];
+                length = organizations.length,
+                dataBlob = [],
+                //sectionIDs = [],
+                // title,
+                // introtext_without_html_tags,
+                url,
+                apiAll,
+                j;
+
+                for (var i = 0; i < length ;  i++) {
+                    //sectionIDs[i] = organizations[i].userId;
+                    //rows[i] = organizations[i].userId;
+                    dataBlob[i] = organizations[i];
                  
-    //             //  }
+                 }
 
-    //                 // this.setState({
-    //                 //     dataSource : this.state.dataSource.cloneWithCells(organizations.image,3),
-    //                 //     loaded     : true
-    //                 // });
+                 //this.Show(rows);
+                    this.setState({
+                        dataSource : this.state.dataSource.cloneWithRows(dataBlob),
+                        loaded     : true
+                    });
                 
-    //     }).done(); 
+                //alert(dataBlob[organizations[0].id]);
+        }).done(); 
               
-    // },
-
-// 
-    renderRow: function(rowData) {
-        return (
-    
-        <View >
-          <View style={styles.row}>
-            <Image
-                style={styles.thumb}
-                source={{uri: 'https://facebook.github.io/react/img/logo_og.png'}}/>
-          </View>
-        </View>
-    
-                     
-                
-        ); /////
-                       
     },
 
-    render: function() {
-        // const Header = () => (
-        //     //alert(this.props.data3);
-        //      //<ToolBar />  
-        // )
-
-         const Main = () => (
-             <ScrollView>
-                <GridView 
-                    dataSource = {this.state.dataSource}
-                    spacing={1}
-                    style={{padding:5}}
-                    renderCell  = {this.renderRow}  
-
-                    />
-            </ScrollView>
-         )
+    renderLoadingView: function () {
         return (
+            <View style={styles.header}>
+                <Text style={styles.headerText}>NEWSAPP</Text>
+                <View style={styles.container}>
+                    <ActivityIndicator
+                        animating={!this.state.loaded}
+                        style={[styles.activityIndicator, {height: 80}]}
+                        size="large"
+                    />
+                </View>
+            </View>
+        );
+    },
+    
+    onActionSelected: function() {
+       this.refs['DRAWER_REF'].openDrawer();
+  
+    },
 
-            <View style={styles.container}>
+    renderListView: function () {
+       
+        const Header = () => (
+            
+            <ToolBar onPress = {() => this.onActionSelected()}/>    
+           
+        )
+        return (
             <DrawerLayoutAndroid
                   drawerWidth={300}
                   drawerLockMode = {'unlocked'}
                   drawerPosition={DrawerLayoutAndroid.positions.Right}
-                  renderNavigationView={() => this.NavigationView() }
+                  renderNavigationView={() => this.NavigationView(this.props.data1, this.props.data2) }
                   onDrawerOpen = {this.onOpen}
                   ref={'DRAWER_REF'}>
-            
-                <ToolBar onPress = {this.onToolPress}/> 
+
+
+            <View style={styles.container}>
+                 <Header/>
+                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                      <Select
+                        width={250}
+                        ref="SELECT1"
+                        optionListRef={this._getOptionList.bind(this)}
+                        defaultValue="Select a Province in Canada ..."
+                        onSelect={this._canada.bind(this)}>
+                        <Option>Alberta</Option>
+                        <Option>British Columbia</Option>
+                        <Option>Manitoba</Option>
+                        <Option>New Brunswick</Option>
+                        <Option>Newfoundland and Labrador</Option>
+                        <Option>Northwest Territories</Option>
+                        <Option>Nova Scotia</Option>
+                        <Option>Nunavut</Option>
+                        <Option>Ontario</Option>
+                        <Option>Prince Edward Island</Option>
+                        <Option>Quebec</Option>
+                        <Option>Saskatchewan</Option>
+                        <Option>Yukon</Option>
+                      </Select>
+
+                      <Text>Selected provicne of Canada: {this.state.canada}</Text>
+
+                      <OptionList ref="OPTIONLIST"/>
+                  </View>
+                <ListView
+                    dataSource = {this.state.dataSource}
+                    style      = {styles.listview}
+                    renderRow  = {this.renderRow}              
+                />
                 
-                <Main/>  
-
-                <View>
-                    <Button text={'Back To AlbumPosts...'} onPress = {this.onPopPress}/> 
-                </View>
-            </DrawerLayoutAndroid>
             </View>
-    
-        );
-      ///
-    },
-    NavigationView: function(){
-       return (<DrawerView text = {'ahmed'}/>);
-    },///
-    onPress: function() {
-        //alert("bla la bla");
-       
-  
+            </DrawerLayoutAndroid>
+        );///
     },
 
+    NavigationView: function(myName, myId){
+       return (<DrawerView text={'Welcome ' + myName} Name={myName} id={myId} navigator={this.props.navigator}/>);
+    },///
 
     onOpen: function(){
         //alert('bla la bla')
     },
 
-    onToolPress: function(){
-        this.refs['DRAWER_REF'].openDrawer();
-    },
-
-    onPopPress: function() {
     
-        this.props.navigator.pop();
+    
+    renderRow: function(rowData) {
+        test +=1;
+        //var names = this.state.nameView[test];
+       //   alert(names); 
+        return (
+            
+                    <View style = {styles.rowContainer1}>
+                        <View style={styles.section}>
+                            <Text >{rowData.catName}</Text>
+                        </View>
+                        
+                        <Text  style={styles.textContainer}>{rowData.name}</Text>
+                        <Button text={'Details'} onPress = {() => this.onSignPress(names, rowData.title, rowData.body, rowData.id, this.props.data1, this.props.data2)}/>
+                        <Text style = {styles.rowLine}>{ '_____________________________________________'} </Text>
+                     </View>
+                
+        ); /////
+                       
+    },
+
+    onSignPress: function(rowData,rowData1,rowData2,rowData3,myName,myId) {
+        this.props.navigator.push({
+            component: 'details',
+            data: rowData,
+            data1: rowData1,
+            data2: rowData2,
+            data3: rowData3,
+            data4: myName,
+            data5: myId
+        }); 
+        
 
     },
 
+
+    render: function() {
+
+        if (!this.state.loaded) {
+            return this.renderLoadingView();
+        }
+
+        else {
+        return this.renderListView();
+        }
+    },
+
+    
 });
+
+
 
 var styles = StyleSheet.create({
     container: {
-        flex: 1,
+        flex: 1
     },
-    row: {
-    justifyContent: 'center',
-    padding: 5,
-    margin: 10,
-    width: 100,
-    height: 100,
-    backgroundColor: '#F6F6F6',
+    rowLine:{
+        padding: 2,
+        alignSelf:'center'   
+    },
+     rowContainer: {
+    flexDirection: 'row',
     alignItems: 'center',
-    borderWidth: 1,
-    borderRadius: 5,
-    borderColor: '#CCC'
+    padding: 8
   },
-
-  section: { 
-        backgroundColor: '#2196F3',
-    },
+  rowContainer1: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    padding: 8
+  },
     thumb: {
-    width: 100,
-    height: 100,
+    width: 80,
+    height: 80,
     padding:5,
     alignItems: 'center'
   },
-    header: {
-        height: 50,
-        justifyContent: 'center',
+  textContainer: {
+    padding:5,
+    fontSize:15,
+    alignSelf: 'flex-start'
+  },
+  textContainer1: {
+    flex: 1,
+    alignItems: 'center',
+    padding:5,
+    flexDirection: 'column',
+    justifyContent: 'space-between'
+  },
+    activityIndicator: {
         alignItems: 'center',
-        backgroundColor: 'black',
-        flexDirection: 'column',
-        paddingTop: 15
+        justifyContent: 'center',
     },
-
+    
     text: {
         color: 'white',
         paddingHorizontal: 8,
         fontSize: 16
     },
-    
-    
+    rowStyle: {
+        paddingVertical: 20,
+        paddingLeft: 16,
+        borderTopColor: 'white',
+        borderLeftColor: 'white',
+        borderRightColor: 'white',
+        borderBottomColor: '#E0E0E0',
+        borderWidth: 1
+    },
+    rowText: {
+        color: '#212121',
+        fontSize: 16
+    },
+    subText: {
+        fontSize: 14,
+        color: '#757575'
+    },
+    section: {
+        padding: 5, 
+        backgroundColor: '#2196F3',
+        alignSelf: 'flex-start',
+    },
 });
