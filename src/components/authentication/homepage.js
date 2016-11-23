@@ -10,26 +10,16 @@ import {AppRegistry,
     ActivityIndicator,
     TouchableHighlight,
     ToolbarAndroid,
+    ScrollView,
     Alert,
     Image} from 'react-native';
 import DrawerLayout from 'react-native-drawer-layout';
-
-//var DrawerLayoutAndroid = require('react-native-drawer-layout');
-//var React1 = require('react-native');
-
-const DropDown = require('react-native-dropdown');
-const {
-  Select,
-  Option,
-  OptionList,
-  updatePosition
-} = DropDown;
-
-// var { 
-  
-// } = React1;
-
-
+import Menu, {
+  MenuContext,
+  MenuOptions,
+  MenuOption,
+  MenuTrigger
+} from 'react-native-menu';
 
 var Button = require('../common/button');
 var DrawerView = require('../common/DrawerView');
@@ -50,34 +40,20 @@ module.exports = React.createClass({
         {
             return data[index];
         }
-        this.state = {
-            canada: ''
-        };
-
+    
         return {
             loaded : false,
+            dropdownSelection: '-- Choose --',
             dataSource : new ListView.DataSource({
                 getSectionData          : getSectionData,
                 rowHasChanged           : (r1, r2) => r1 !== r2
             }),
-            nameView: getNameView
+            
         }
     },
     componentDidMount: function () {
-        updatePosition(this.refs['SELECT1']);
-        updatePosition(this.refs['OPTIONLIST']);
-        this.fetchData();
+       this.fetchData();
     },
-    _getOptionList() {
-    return this.refs['OPTIONLIST'];
-  },
-  _canada(province) {
-
-    this.setState({
-      ...this.state,
-      canada: province
-    });
-  },
     
     fetchData: function () {
         //rowApi = rowApi +10; 
@@ -117,6 +93,53 @@ module.exports = React.createClass({
               
     },
 
+    fetchFilterData: function(value){
+        this.setState({dropdownSelection: value});
+        //
+        var brandId;
+        if (value == "brand 1"){
+            brandId = "1";
+        }
+        if (value == "brand 2") {
+            brandId = "2";
+        }
+        //alert(brandId)
+        var API_URL1 = 'http://imageinterior-merged.rhcloud.com/ImageInterior/rest/filterProductsGroup?brands='+brandId;
+        fetch(API_URL1, {  
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+              },}).then((response) => response.json()).then((responseData) => {
+            var organizations = responseData.products,
+
+                length = organizations.length,
+                dataBlob = [],
+                //sectionIDs = [],
+                // title,
+                // introtext_without_html_tags,
+                url,
+                apiAll,
+                j;
+
+                for (var i = 0; i < length ;  i++) {
+                    //sectionIDs[i] = organizations[i].userId;
+                    //rows[i] = organizations[i].userId;
+                    dataBlob[i] = organizations[i];
+                 
+                 }
+
+                 //this.Show(rows);
+                    this.setState({
+                        dataSource : this.state.dataSource.cloneWithRows(dataBlob),
+                        loaded     : true
+                    });
+                
+                //alert(dataBlob[organizations[0].id]);
+        }).done(); 
+              
+
+    },
+
     renderLoadingView: function () {
         return (
             <View style={styles.header}>
@@ -141,9 +164,10 @@ module.exports = React.createClass({
        
         const Header = () => (
             
-            <ToolBar onPress = {() => this.onActionSelected()}/>    
+            <ToolBar onPress = {() => this.onActionSelected()}/> 
+            
            
-        )
+        )///
         return (
             <DrawerLayoutAndroid
                   drawerWidth={300}
@@ -153,35 +177,30 @@ module.exports = React.createClass({
                   onDrawerOpen = {this.onOpen}
                   ref={'DRAWER_REF'}>
 
-
-            <View style={styles.container}>
-                 <Header/>
-                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                      <Select
-                        width={250}
-                        ref="SELECT1"
-                        optionListRef={this._getOptionList.bind(this)}
-                        defaultValue="Select a Province in Canada ..."
-                        onSelect={this._canada.bind(this)}>
-                        <Option>Alberta</Option>
-                        <Option>British Columbia</Option>
-                        <Option>Manitoba</Option>
-                        <Option>New Brunswick</Option>
-                        <Option>Newfoundland and Labrador</Option>
-                        <Option>Northwest Territories</Option>
-                        <Option>Nova Scotia</Option>
-                        <Option>Nunavut</Option>
-                        <Option>Ontario</Option>
-                        <Option>Prince Edward Island</Option>
-                        <Option>Quebec</Option>
-                        <Option>Saskatchewan</Option>
-                        <Option>Yukon</Option>
-                      </Select>
-
-                      <Text>Selected provicne of Canada: {this.state.canada}</Text>
-
-                      <OptionList ref="OPTIONLIST"/>
-                  </View>
+                  <Header/>
+                  <MenuContext style={{ flex: 1 }} ref="MenuContext">
+                <View style={styles.content}>
+                  <Text style={styles.contentText}>
+                    Choose your brand ...
+                  </Text>
+                  <Menu style={styles.dropdown} onSelect={ (value) => this.fetchFilterData(value)}>
+                    <MenuTrigger>
+                      <Text>{this.state.dropdownSelection}</Text>
+                    </MenuTrigger>
+                    <MenuOptions optionsContainerStyle={styles.dropdownOptions}
+                                 renderOptionsContainer={(options) => <ScrollView><Text>CHOOSE SOMETHING....</Text>{options}</ScrollView>}>
+                      <MenuOption value="brand 1">
+                        <Text>brand 1</Text>
+                      </MenuOption>
+                      <MenuOption value="brand 2">
+                        <Text>brand 2</Text>
+                      </MenuOption>
+                    </MenuOptions>
+                  </Menu>
+                </View>
+                <View style={styles.container}>
+                 
+                 
                 <ListView
                     dataSource = {this.state.dataSource}
                     style      = {styles.listview}
@@ -189,6 +208,8 @@ module.exports = React.createClass({
                 />
                 
             </View>
+        </MenuContext>   
+            
             </DrawerLayoutAndroid>
         );///
     },
@@ -198,7 +219,7 @@ module.exports = React.createClass({
     },///
 
     onOpen: function(){
-        //alert('bla la bla')
+        // //alert('bla la bla')
     },
 
     
@@ -215,23 +236,21 @@ module.exports = React.createClass({
                         </View>
                         
                         <Text  style={styles.textContainer}>{rowData.name}</Text>
-                        <Button text={'Details'} onPress = {() => this.onSignPress(names, rowData.title, rowData.body, rowData.id, this.props.data1, this.props.data2)}/>
+                        <Button text={'Details'} onPress = {() => this.onDetailsPress(rowData.name, rowData.desc, rowData.price)}/>
                         <Text style = {styles.rowLine}>{ '_____________________________________________'} </Text>
                      </View>
                 
         ); /////
                        
     },
-
-    onSignPress: function(rowData,rowData1,rowData2,rowData3,myName,myId) {
+    
+    onDetailsPress: function(rowData,rowData1,rowData2) {
+        
         this.props.navigator.push({
             component: 'details',
             data: rowData,
             data1: rowData1,
-            data2: rowData2,
-            data3: rowData3,
-            data4: myName,
-            data5: myId
+            data2: rowData2
         }); 
         
 
@@ -256,7 +275,7 @@ module.exports = React.createClass({
 
 var styles = StyleSheet.create({
     container: {
-        flex: 1
+        flex: 3
     },
     rowLine:{
         padding: 2,
@@ -322,4 +341,37 @@ var styles = StyleSheet.create({
         backgroundColor: '#2196F3',
         alignSelf: 'flex-start',
     },
+    disabled: {
+    color: '#ccc'
+  },
+  divider: {
+    marginVertical: 5,
+    marginHorizontal: 2,
+    borderBottomWidth: 1,
+    borderColor: '#ccc'
+  },
+  content: {
+    backgroundColor: 'white',
+    paddingHorizontal: 10,
+    paddingTop: 20,
+    paddingBottom: 30,
+    borderBottomWidth: 1,
+    borderColor: '#ccc'
+  },
+  contentText: {
+    fontSize: 18
+  },
+  dropdown: {
+    width: 300,
+    borderColor: '#999',
+    borderWidth: 1,
+    padding: 5
+  },
+  dropdownOptions: {
+    marginTop: 30,
+    borderColor: '#ccc',
+    borderWidth: 2,
+    width: 300,
+    height:100
+}
 });

@@ -15,13 +15,13 @@ var Homepage = require('./components/authentication/homepage');
 // var DrawerView = require('./components/common/DrawerView');
 
 var Mainpage = require('./components/authentication/mainpage');
-// var Details = require('./components/authentication/details');
+var Details = require('./components/authentication/details');
 
 var ROUTES = {
     signin: Signin,
     signup: Signup,
     mainpage: Mainpage,
-    // details: Details,
+    details: Details,
 
     // MyPosts: MyPosts,
     // MyAlbumes: MyAlbumes,
@@ -44,8 +44,8 @@ module.exports = React.createClass({
             return (<Signin navigator={navigator} data = {route.data} data1 = {route.data1} data2 = {route.data2} data3 = {route.data3} data4 = {route.data4} data5 = {route.data5}/>);
         case 'homepage':
             return (<Homepage navigator={navigator} data = {route.data} data1 = {route.data1} data2 = {route.data2} data3 = {route.data3} data4 = {route.data4} data5 = {route.data5}/>);
-        case 'mainpage':
-             return (<Mainpage navigator={navigator} data = {route.data} data1 = {route.data1} data2 = {route.data2} data3 = {route.data3} data4 = {route.data4} data5 = {route.data5}/>);
+        case 'details':
+             return (<Details navigator={navigator} data = {route.data} data1 = {route.data1} data2 = {route.data2} data3 = {route.data3} data4 = {route.data4} data5 = {route.data5}/>);
         /// case 'MyPosts':
         //     return (<MyPosts navigator={navigator} data = {route.data} data1 = {route.data1} data2 = {route.data2} data3 = {route.data3} data4 = {route.data4} data5 = {route.data5}/>);
         // case 'MyAlbumes':
