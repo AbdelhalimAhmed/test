@@ -16,54 +16,45 @@ module.exports = React.createClass({
     getInitialState: function () {
     
         return {
-            name: 'favorite-border',
+            name: '',
         }
     },
 
-    onHomePress: function(userId, userName){
-      // this.refs['DRAWER_REF'].openDrawer();
-    },
-    onLoginPress: function(userId, userName){
-        this.props.navigator.push({ 
-            component: 'signin',
-            // data: userId,
-            // data1:userName,
-        });
-    },
-    onSignupPress: function(userId, userName){
-        // alert(userId);
-        this.props.navigator.push({ 
-            component: 'signup',
-            // data: userId,
-            // data1:userName,
-        });
+    onSignoutPress: function(userId, userName){
+      this.props.navigator.push({
+            component: 'homepage',
+            data: '',
+            data1:'',
+        });   
     },
     onFacebookPress:function(){
         alert("hellowwwwwwww")
     },
     render: function() {
-        //alert(this.props.id)<Text style={{margin: 10, fontSize: 18, textAlign: 'left',backgroundColor: '#2196F3'}}>{'welcome '+this.props.text}</Text>
-                
+        //alert(this.props.id)
         
         return (
-            <View style={{flex: 1, backgroundColor: '#fff', padding: 10,justifyContent: 'flex-start',alignItems: 'flex-start'}}>
+            <View style={{flex: 1, backgroundColor: '#fff', padding: 10}}>
+                <Text style={{margin: 10, fontSize: 18, textAlign: 'left',backgroundColor: '#2196F3'}}>{'welcome '+this.props.id}
+                </Text>
+                <View style={{justifyContent: 'center',alignItems: 'center',flexDirection:'column'}}>
+                    <MaterialIcons name='account-circle' size={70} color="black" onPress = {this.onClosePress}/>  
+                    <Text style={{fontFamily: 'Arial', fontSize: 15}}>  User Name </Text>
+                </View>
                 <Icon.Button style={{backgroundColor:'#fff'}} name={'home'}  color={'black'} onPress={ this.props.onPress}>
                     <Text style={{fontFamily: 'Arial', fontSize: 15}}>  Home </Text>
                 </Icon.Button>
-                <Icon.Button style={{backgroundColor:'#fff'}} name={'sign-in'} color={'black'} onPress = {this.onLoginPress}>
-                    <Text style={{fontFamily: 'Arial', fontSize: 15}}>  Login In </Text>
-                </Icon.Button>
-                <Icon.Button style={{backgroundColor:'#fff'}} name={'user-plus'} color={'black'} onPress = {this.onSignupPress}>
-                    <Text style={{fontFamily: 'Arial', fontSize: 15}}> Register </Text>
+                <Icon.Button style={{backgroundColor:'#fff'}} name={'sign-out'}  color={'black'} onPress = {this.onSignoutPress}>
+                    <Text style={{fontFamily: 'Arial', fontSize: 15}}>  Sign out </Text>
                 </Icon.Button>
                 <Icon.Button style={{backgroundColor:'#fff'}} name={'bars'} color={'black'} onPress = {this.onFacebookPress}>
-                    <Text style={{fontFamily: 'Arial', fontSize: 15}}> Catalogs </Text>
+                    <Text style={{fontFamily: 'Arial', fontSize: 15}}>  Catalogs </Text>
                 </Icon.Button>
                 <Icon.Button style={{backgroundColor:'#fff'}} name={'shopping-bag'} color={'black'} onPress = {this.onFacebookPress}>
-                    <Text style={{fontFamily: 'Arial', fontSize: 15}}> Products </Text>
+                    <Text style={{fontFamily: 'Arial', fontSize: 15}}>  Products </Text>
                 </Icon.Button>
                 <Icon.Button style={{backgroundColor:'#fff'}} name={'bed'} color={'black'} onPress = {this.onFacebookPress}>
-                    <Text style={{fontFamily: 'Arial', fontSize: 15}}> Showrooms </Text>
+                    <Text style={{fontFamily: 'Arial', fontSize: 15}}>  Showrooms </Text>
                 </Icon.Button>
                 <Icon.Button style={{backgroundColor:'#fff'}} name={'paint-brush'} color={'black'} onPress = {this.onFacebookPress}>
                     <Text style={{fontFamily: 'Arial', fontSize: 15}}>  Designer </Text>

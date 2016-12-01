@@ -1,5 +1,7 @@
 import React, { Component, } from 'react';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 var React1 = require('react-native');
 var t = require('tcomb-form-native');
@@ -269,6 +271,9 @@ var options = {
 
 module.exports = React.createClass({
     getInitialState: function() {
+      this.state = {
+                userId:''
+            }
         return {
             username:'',
             password:'',
@@ -297,8 +302,11 @@ module.exports = React.createClass({
 
                     }else{
                         alert('add successfully');
+                        this.setState({userId:organizations.id});
                         this.props.navigator.push({
                         component: 'homepage',
+                          data: this.state.userId,
+                          data1:'success'
                         });
                     }
 
@@ -317,9 +325,17 @@ module.exports = React.createClass({
     // clear content from all textbox
     this.setState({ value: null });
   },
+  onClosePress:function(){
+       this.props.navigator.pop();
+    },
     render: function() {
+        const Header = () => (
+            <MaterialIcons name='close' size={30} color="gray" onPress = {this.onClosePress}/>      
+           )///
         return (
             <KeyboardAwareScrollView ref='scroll'>
+            <View style = {styles.container11}>
+            <Header/>
                 <View style={styles.container}>
                 {/* display */}
                 <Form
@@ -332,6 +348,7 @@ module.exports = React.createClass({
                 <TouchableHighlight style={styles.button} onPress={this.onPress} underlayColor='#99d9f4'>
                   <Text style={styles.buttonText}>Save</Text>
                 </TouchableHighlight>
+             </View>
              </View>
             </KeyboardAwareScrollView>
 
@@ -362,9 +379,17 @@ var styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'flex-start',
-        marginTop: 10,
-        padding: 10,
-        backgroundColor: '#ffffff',
+        padding: 15,
+        
+    },
+    container11: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'flex-end',
+        flexDirection:'column',
+        margin: 15,
+        
+
     },
     container1: {
         flex: 1,

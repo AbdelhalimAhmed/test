@@ -25,6 +25,7 @@ var Button = require('../common/button');
 var DrawerView = require('../common/DrawerView');
 //var Details = require('../authentication/details');
 var ToolBar = require('../authentication/ToolBar');
+var DrawerViewin = require('../common/DrawerViewin');
 
 var test =-1;
 var rows = [];
@@ -35,6 +36,10 @@ module.exports = React.createClass({
         var getSectionData = (dataBlob, sectionID) => {
             return dataBlob[sectionID];
         }
+
+        this.state = {
+                
+            }
 
         var getNameView = (data, index) =>
         {
@@ -143,7 +148,7 @@ module.exports = React.createClass({
     renderLoadingView: function () {
         return (
             <View style={styles.header}>
-                <Text style={styles.headerText}>NEWSAPP</Text>
+                <Text style={styles.headerText}>Loading.....</Text>
                 <View style={styles.container}>
                     <ActivityIndicator
                         animating={!this.state.loaded}
@@ -158,6 +163,9 @@ module.exports = React.createClass({
     onActionSelected: function() {
        this.refs['DRAWER_REF'].openDrawer();
   
+    },
+    onDrawSelected: function(){
+        this.refs['DRAWER_REF'].closeDrawer();
     },
 
     renderListView: function () {
@@ -214,12 +222,20 @@ module.exports = React.createClass({
         );///
     },
 
-    NavigationView: function(myName, myId){
-       return (<DrawerView text={'Welcome ' + myName} Name={myName} id={myId} navigator={this.props.navigator}/>);
+    NavigationView: function(){
+        if(this.props.data1 == 'success'){
+            // alert(this.props.data1)
+            return (<DrawerViewin text={'Welcome '+ this.props.data} id={this.props.data} navigator={this.props.navigator} onPress = {() => this.onDrawSelected() }/>);
+        }
+        else{
+            // alert('la2yaba')
+            return (<DrawerView navigator={this.props.navigator} onPress = {() => this.onDrawSelected() }/>);
+        }
+       
     },///
 
     onOpen: function(){
-        // //alert('bla la bla')
+        // //
     },
 
     
@@ -335,6 +351,10 @@ var styles = StyleSheet.create({
     subText: {
         fontSize: 14,
         color: '#757575'
+    },
+    header:{
+        flex:1,
+        backgroundColor: '#2196F3',
     },
     section: {
         padding: 5, 

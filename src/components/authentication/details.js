@@ -24,7 +24,12 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 module.exports = React.createClass({
+    getInitialState: function () {
     
+        return {
+            name: 'favorite-border',
+        }
+    },
 
     onActionSelected: function(){
         this.refs['DRAWER_REF'].openDrawer();
@@ -33,12 +38,11 @@ module.exports = React.createClass({
     render: function() {
         //alert(this.props.data3);
         //alert("haa")
+
         const Header = () => (
-            
             <ToolBar onPress = {() => this.onActionSelected()}/>    
            
         )///
-        
         return (
         <DrawerLayoutAndroid
                   drawerWidth={300}
@@ -46,14 +50,14 @@ module.exports = React.createClass({
                   drawerPosition={DrawerLayoutAndroid.positions.Right}
                   renderNavigationView={() => this.NavigationView(this.props.data4, this.props.data5) }
                   onDrawerOpen = {this.onOpen}
-                  ref={'DRAWER_REF'}>
-            
-            <View style = {styles.container}>
+                  ref={'DRAWER_REF'}>             
+                  <View style = {styles.container}>
 
            <Header/>
-           <MaterialIcons name="favorite" size={30} color="#900" />
+           
                 <View style={styles.section}>
-                    <Text style = {{fontWeight: 'bold',fontSize: 18,color: 'white'}}>Name:{'\n'}{this.props.data}</Text>
+                    <Text style = {{fontWeight: 'bold',fontSize: 16,color: 'white'}}>Name:{'\n'}{this.props.data}</Text>
+                    <MaterialIcons name={this.state.name} size={30} color="#900" onPress = {this.favoritePress}/>
                 </View>
 
                 <Text style = {styles.textContainer} >Description:{'\n'}{this.props.data1}</Text>
@@ -61,6 +65,7 @@ module.exports = React.createClass({
                  
     
             <Button text={'Back To ListProducts...'} onPress = {this.onPopPress}/> 
+            
              </View>
            
         </DrawerLayoutAndroid>
@@ -76,6 +81,13 @@ module.exports = React.createClass({
     
         this.props.navigator.pop();
 
+    },
+    onReportPress: function(){
+        alert("fill report")
+    },
+    favoritePress: function(){
+         //alert("hiiiiii")
+         this.setState({name: 'favorite'});
     },
 
 });

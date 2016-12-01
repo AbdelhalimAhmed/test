@@ -1,6 +1,8 @@
 import React, { Component, } from 'react';
 //import DrawerLayout from 'react-native-drawer-layout';
 import AwesomeButton from 'react-native-awesome-button';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 //var DrawerLayoutAndroid = require('react-native-drawer-layout');
 var React1 = require('react-native');
@@ -16,7 +18,7 @@ var {
 var Button = require('../common/button'),
     user,
     ids;
-
+var ToolBar = require('../authentication/ToolBar');
     var organizations ;
     var namesIds = [];
     
@@ -31,6 +33,7 @@ module.exports = React.createClass({
         this.state = {
                 buttonState: 'idle',
                 check :'',
+                userId:''
             }
         //this.logIn = this.logIn.bind(this)
 		return{
@@ -52,13 +55,20 @@ module.exports = React.createClass({
         // }, 2000);
         // setTimeout(() => {this.onLoginPress(this.state.username1,this.state.password)},100);
     },
+    onClosePress:function(){
+       this.props.navigator.pop();
+    },
   
     render: function() {
+        const Header = () => (
+            <MaterialIcons name='cancel' size={30} color="gray" onPress = {this.onClosePress}/>      
+           )///
         return (  
-
+            <View style = {styles.container11}>
+                <Header/>
                 <View style = {styles.container}>
-                <View style = {styles.container}>
-                    <Text>  Sign In </Text>
+                
+                <Text>  Sign In </Text>
                     <Text style = {styles.label}>Username:</Text>
                     <TextInput 
                         style = {styles.input}
@@ -107,8 +117,8 @@ module.exports = React.createClass({
                             <Text style={styles.label1}>I don't have an account...</Text>
                     </TouchableHighlight>
                     </View>
-                    </View>
-                
+
+                </View>
                   
                 
             
@@ -138,50 +148,29 @@ module.exports = React.createClass({
                     if(organizations.state == 'false'){
                     this.setState({check:'0',buttonState: 'wrong'});
                     //this.onCheck (this.state.check,organizations[0].name,organizations[0].id);
-                    //alert(this.state.check);
+                    
                     //this.setState({ buttonState: 'wrong' });
                     this.onCheck ('0');
                 }else{
-                    this.setState({check:'1',buttonState: 'success',errorMassage:'' });
+                    this.setState({check:'1',buttonState: 'success',errorMassage:'',userId:organizations.id});
                     //alert(this.state.check);
                     //this.setState({ buttonState: 'success' });
                     this.onCheck ('1');
                 }
 
                 }).done();
-                                
-                
-
-        // }).done();
-
-
     },
 
     onCheck : function(lol){ 
         //alert(lol);
     	if(lol == '1'){
-            //alert("bs");
-            // //alert(this.state.nameIds[4]);
-            // var API_URL1 = 'http://jsonplaceholder.typicode.com/users';
-            // fetch(API_URL1).then((response) => response.json()).then((responseData) => {
-            //     var organizations1 = responseData,
-            //     //alert(organizations1[1].name);
-            //     length = organizations1.length;
-                
-            //     for (var s = 0; s < length; s++){
-            //         namesIds[s] = new Array(2);
-            //     }
-
-            //     for (var j = 0; j < length; j++) {
-            //         namesIds[j][0] = organizations1[j].name;
-            //     }
-
-            //     for (var j = 0; j < length; j++) {
-            //         namesIds[j][1] = organizations1[j].id;
-            //     }
             this.setState({ buttonState: 'idle',errorMassage:'' })
+            //alert(this.state.userId);
             this.props.navigator.push({
                     component: 'homepage',
+                    data: this.state.userId,
+                    data1:'success'
+
                     
             });
             // }).done();
@@ -201,6 +190,15 @@ var styles = StyleSheet.create({
         alignItems: 'center',
         flexDirection:'row',
         margin: 20,
+        
+
+    },
+    container11: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'flex-end',
+        flexDirection:'column',
+        margin: 15,
         
 
     },
@@ -251,5 +249,15 @@ var styles = StyleSheet.create({
         fontSize: 12,
         textDecorationLine: "underline",
         textDecorationColor: "red"
-    }
+    },headert: {
+        height: 50,
+        backgroundColor: 'black',
+        flexDirection: 'column',
+        paddingTop: 15
+    },
+    headerText: {
+        fontWeight: 'bold',
+        fontSize: 25,
+        color: 'white'
+    },
 });
